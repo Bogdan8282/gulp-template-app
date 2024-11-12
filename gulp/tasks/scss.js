@@ -1,4 +1,4 @@
-import dartSass from "sass";
+import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
 import rename from "gulp-rename";
 
@@ -10,31 +10,37 @@ import groupCssMediaQueries from "gulp-group-css-media-queries";
 const sass = gulpSass(dartSass);
 
 export const scss = () => {
-  return app.gulp
-    .src(app.path.src.scss, { sourcemaps: true })
-    .pipe(
-      app.plugins.plumber(
-        app.plugins.notify.onError({
-          title: "SCSS",
-          messsage: "Error <%= error.message %>",
+  return (
+    app.gulp
+      .src(app.path.src.scss, { sourcemaps: true })
+      .pipe(
+        app.plugins.plumber(
+          app.plugins.notify.onError({
+            title: "SCSS",
+            messsage: "Error <%= error.message %>",
+          })
+        )
+      )
+      .pipe(sass({ outputStyle: "expanded" }))
+      .pipe(groupCssMediaQueries())
+      .pipe(
+        webpcss({
+          webpCless: ".webp",
+          noWebpClass: ".no-webp",
         })
       )
-    )
-    .pipe(sass({ outputStyle: "expanded" }))
-    .pipe(groupCssMediaQueries())
-    .pipe(webpcss({
-        webpCless: ".webp",
-        noWebpClass: ".no-webp"
-    }))
-    .pipe(autoprefixer({
-        grid: true,
-        overrideBrowserslist: ['last 3 versions'],
-        cascade: true
-    }))
-    // Якщо треба буде не стиснутий файл стилів
-    // .pipe(app.gulp.dest(app.path.build.css))
-    .pipe(cleanCss())
-    .pipe(rename({ extname: ".min.css" }))
-    .pipe(app.gulp.dest(app.path.build.css))
-    .pipe(app.plugins.browsersync.stream());
+      .pipe(
+        autoprefixer({
+          grid: true,
+          overrideBrowserslist: ["last 3 versions"],
+          cascade: true,
+        })
+      )
+      // Якщо треба буде не стиснутий файл стилів
+      // .pipe(app.gulp.dest(app.path.build.css))
+      .pipe(cleanCss())
+      .pipe(rename({ extname: ".min.css" }))
+      .pipe(app.gulp.dest(app.path.build.css))
+      .pipe(app.plugins.browsersync.stream())
+  );
 };
