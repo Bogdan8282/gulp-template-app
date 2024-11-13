@@ -13,7 +13,7 @@ export const images = () => {
       )
     )
     .pipe(app.plugins.newer(app.path.build.images))
-    .pipe(webp()) // Convert images to WebP
+    .pipe(webp())
     .pipe(app.gulp.dest(app.path.build.images))
 
     .pipe(app.gulp.src(app.path.src.images, { encoding: false }))
