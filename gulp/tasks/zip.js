@@ -1,19 +1,14 @@
-import del from "del";
-import zipPlugin from "gulp-zip";
+import fs from "fs";
+import archiver from "archiver";
 
-export const zip = () => {
-  del(`./${app.path.rootFolder}.zip`);
+export const zip = async () => {
+  const output = fs.createWriteStream(`./${app.path.rootFolder}.zip`);
+  const archive = archiver("zip", { zlib: { level: 9 } });
 
-  return app.gulp
-    .src(`${app.path.buildFolder}/**/*.*`, {})
-    .pipe(
-      app.plugins.plumber(
-        app.plugins.notify.onError({
-          title: "ZIP",
-          message: "Error: <%= error.message %>",
-        })
-      )
-    )
-    .pipe(zipPlugin(`${app.path.rootFolder}.zip`))
-    .pipe(app.gulp.dest("./"));
+  output.on("close", () => console.log(`${archive.pointer()} total bytes`));
+  archive.on("error", (err) => { throw err; });
+
+  archive.pipe(output);
+  archive.directory(`${app.path.buildFolder}/`, false);
+  archive.finalize();
 };
