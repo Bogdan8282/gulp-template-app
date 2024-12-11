@@ -27,7 +27,7 @@ export const scss = () => {
         app.plugins.if(
           app.isBuild,
           webpcss({
-            webpCless: ".webp",
+            webpClass: ".webp",
             noWebpClass: ".no-webp",
           })
         )
