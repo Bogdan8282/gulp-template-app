@@ -1,9 +1,9 @@
 ## Known issues
 
-1. Make sure to install the correct version of webp-converter.
+1. Do not delete any folders from src.
+
+2. Do not delete this line from index.html: 
 
 ```console
-npm install webp-converter@2.2.3 --save-dev
+<script src="js/app.min.js"></script>
 ```
-
-2. Do not delete empty folders from src.
